@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState } from 'react'
 //import { Route, Switch } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -14,7 +15,7 @@ import { ApolloClient,InMemoryCache } from '@apollo/client';
 */
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/',
+  uri: 'http://localhost:4000/graphql',
   cache: new InMemoryCache()
 });
 
