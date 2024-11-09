@@ -6,19 +6,21 @@ import { Outlet,Link } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 const Navigation = () => {
     return(
+        <header className='Title'>
         <Fragment>
-         <div className='navigation'>Naive Stugg</div>
-         <Link className='logo-container' to='/'>
+         <div >Naive Stugg</div>
+         <Link to='/'>
                 <div>Logo</div>
           </Link>
-          <Link className='nav-link' to='/buildings'>
+          <Link to='/buildings'>
                     Buildings
            </Link>
 
-          <div className='nav-links-container'>
+          <div >
                
           </div>
          </Fragment>
+         </header>
     )
 }
 

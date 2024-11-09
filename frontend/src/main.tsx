@@ -15,11 +15,13 @@ const client = new ApolloClient({
 const root = createRoot(document.getElementById('root')!);
 root.render(
   <StrictMode>
-    <ApolloProvider client={client}>
+    <BrowserRouter>
+      <ApolloProvider client={client}>
       <BuildingsProvider>
         <App />
        </BuildingsProvider>
-    </ApolloProvider>
+       </ApolloProvider>
+    </BrowserRouter>
   </StrictMode>,
 )
 /*createRoot(document.getElementById('root')!).render(
