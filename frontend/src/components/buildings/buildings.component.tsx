@@ -52,7 +52,8 @@ const Buildings = () => {
           ) :
             <div>dont make new building</div>}
          
-            <div className="buildings-container">{
+            <div className="buildings-container">
+              {
               
                 buildings?.map((building)=>(
                   
