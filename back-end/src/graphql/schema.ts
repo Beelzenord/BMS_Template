@@ -2,7 +2,7 @@ export const typeDef = `#graphql
   # Queryable fields
   type BuildingSpec {
     id: ID!
-    buildingName: String
+    name: String
     temperature: Int
   }
     type Query {
@@ -10,7 +10,11 @@ export const typeDef = `#graphql
   }
 
   type Mutation {
-    addBuildingSpec(buildingName: String!, temperature: Int!): BuildingSpec!
+    addBuildingSpec(name: String!, temperature: Int!): BuildingSpec!
+    updateBuildingSpec(id:ID! name: String, temperature: Int) : BuildingSpec! 
+    deleteBuilding(id: ID!): Boolean!
   }  
+  
+  
 `;
 
