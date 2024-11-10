@@ -4,6 +4,7 @@
   padding: 2rem;
   text-align: center;
   min-height: inherit;
+  min-width: -webkit-fill-available;
 }
 
 .logo {

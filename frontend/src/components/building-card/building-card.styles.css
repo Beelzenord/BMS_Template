@@ -1,0 +1,24 @@
+.building-card{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  align-items: center;
+  position: relative;
+  border: 5px solid #ccc !important;
+  background-color: yellow;
+  button{
+    display: none;
+  }
+  &:hover {
+    background-color: green;
+
+    button {
+        opacity: 0.85;
+        display: flex;
+      }
+  }
+}
+
+
+

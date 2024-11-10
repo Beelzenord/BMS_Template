@@ -6,7 +6,7 @@ const COLLECTIONS = gql`
   
   buildingSpec {
     id
-    buildingName
+    name
     temperature
   }
 
@@ -14,20 +14,20 @@ const COLLECTIONS = gql`
 `
 
 const ADD_NEW_BUILDING = gql`
-  mutation($buildingName: String!, $temperature: Int!){
+  mutation($name: String!, $temperature: Int!){
  
-    addBuildingSpec(buildingName: $buildingName, temperature: $temperature) {
-      buildingName
+    addBuildingSpec(name: $name, temperature: $temperature) {
+      name
       temperature
  }
 }
 `
 
 const UPDATE_BUILDING = gql`
-  mutation ($id: ID!, $buildingName: String, $temperature: Int) {
-    updateBuildingSpec(id: $id, buildingName: $buildingName, temperature: $temperature) {
+  mutation ($id: ID!, $name: String, $temperature: Int) {
+    updateBuildingSpec(id: $id, name: $name, temperature: $temperature) {
       id
-      buildingName
+      name
       temperature
     }
   }
@@ -35,7 +35,7 @@ const UPDATE_BUILDING = gql`
 
 
 
-interface Building {
+export interface Building {
     id: string;
     name: string;
     temperature: number;
@@ -96,7 +96,7 @@ export const BuildingsProvider = ({children}: {children: React.ReactNode}) => {
         try{
             await addBuildingMutation({
                 variables:{
-                  buildingName: newBuilding.name,
+                  name: newBuilding.name,
                   temperature: newBuilding.temperature
                 }
             })
@@ -107,13 +107,14 @@ export const BuildingsProvider = ({children}: {children: React.ReactNode}) => {
     }
 
     const updateBuilding = async(id: string, updates: Partial<Building>)=> {
-        updates.name = 'updated name';
-        console.log('inside updated.', updates);
+       // updates.name = 'updated name';
+       // console.log('inside updated.', updates);
       
       try{
+        console.log('before updating.. ', updates);
         const result = await updateBuildingMutation({
         //  variables: { id, ...updates }
-          variables:{id:id,something:'her',buildingName:updates.name,temperature:updates.temperature}
+          variables:{id:id,something:'her',name:updates.name,temperature:updates.temperature}
         });
         console.log('here is the result');
         }
