@@ -1,133 +1,103 @@
-import {createContext,useState, useEffect} from 'react';
-import { gql,useQuery,useMutation } from '@apollo/client';
+import { createContext, useState, useEffect } from 'react';
+import { gql, useQuery, useMutation } from '@apollo/client';
 import React from 'react';
-const COLLECTIONS = gql`
-  query GetCollections {
-  
-  buildingSpec {
-    id
-    name
-    temperature
-  }
-
-  }
-`
-
-const ADD_NEW_BUILDING = gql`
-  mutation($name: String!, $temperature: Int!){
- 
-    addBuildingSpec(name: $name, temperature: $temperature) {
-      name
-      temperature
- }
-}
-`
-
-const UPDATE_BUILDING = gql`
-  mutation ($id: ID!, $name: String, $temperature: Int) {
-    updateBuildingSpec(id: $id, name: $name, temperature: $temperature) {
-      id
-      name
-      temperature
-    }
-  }
-`;
-
-
+import { COLLECTIONS, ADD_NEW_BUILDING, UPDATE_BUILDING, DELETE_BUILDING } from '../utils/graphql.client';
 
 export interface Building {
-    id: string;
-    name: string;
-    temperature: number;
+  id: string;
+  name: string;
+  temperature: number;
 }
 
 interface BuildingsContextType {
-    buildings: Building[];
-    addBuilding: (building: Omit<Building, 'id'>) => void;
-    updateBuilding: (id: string, updates: Partial<Building>) => void;
-    //deleteBuilding: (id: string) => void;
-  /*  
- buildingSpec {
-    id
-    buildingName
-    temperature
-  }
-
-    */
-  }
+  buildings: Building[];
+  addBuilding: (building: Omit<Building, 'id'>) => void;
+  updateBuilding: (id: string, updates: Partial<Building>) => void;
+  deleteBuilding: (id: string) => Boolean;
+  submitBuilding: ({ name, temperature }: { name: string, temperature: number }, ...postMethod: any[]) => void;
+}
 export const BuildingsContext = createContext<BuildingsContextType | undefined>(undefined);
 
+export const BuildingsProvider = ({ children }: { children: React.ReactNode }) => {
+  const [buildingSpec, setBuildingsMap] = useState<Building[]>([]);
+  const { loading, error, data, refetch } = useQuery(COLLECTIONS);
+  const [addBuildingMutation] = useMutation(ADD_NEW_BUILDING);
+  const [updateBuildingMutation] = useMutation(UPDATE_BUILDING);
+  const [deleteBuildingMutation] = useMutation(DELETE_BUILDING);
 
-  /*useMutation(ADD_NEW_BUILDING, {
-    variables:{
-      buildingName: 'newBuilding.name',
-      temperature: newBuilding.temperature
+  useEffect(() => {
+    console.log('graphql ', data);
+    if (data) {
+      const { buildingSpec } = data;
+      console.log('buildingsSpec: ', buildingSpec);
+      setBuildingsMap(buildingSpec);
     }
-  });*/
-  /**
-   * const [createLink] = useMutation(CREATE_LINK_MUTATION, {
-    variables: {
-      description: formState.description,
-      url: formState.url
-    }
-  });
-   */
- // setBuildings(prevBuildings => [...prevBuildings, newBuilding]);
- //BuildingsProvider({ children }: { children: React.ReactNode } 
-export const BuildingsProvider = ({children}: {children: React.ReactNode}) => {
-    const [buildingSpec, setBuildingsMap] = useState<Building[]>([]);
-    const {loading, error, data} = useQuery(COLLECTIONS);
-    const [addBuildingMutation] =  useMutation(ADD_NEW_BUILDING);
-    const [updateBuildingMutation] = useMutation(UPDATE_BUILDING);
-    useEffect(() => {
-        console.log('graphql ',data);
-        if(data){
-          const {buildingSpec}  = data;
-          console.log('buildingsSpec: ', buildingSpec);
-          setBuildingsMap(buildingSpec);
-        }
-        
-        
-      }, [data]);
+  }, [data]);
 
-      const addBuilding = async (building: Omit<Building, 'id'>) => {
-        const newBuilding = { ...building, id: Date.now().toString() };
-        console.log('back in context ', newBuilding);
-        try{
-            await addBuildingMutation({
-                variables:{
-                  name: newBuilding.name,
-                  temperature: newBuilding.temperature
-                }
-            })
+  const addBuilding = async (building: Omit<Building, 'id'>) => {
+    const newBuilding = { ...building, id: Date.now().toString() };
+    console.log('back in context ', newBuilding);
+    try {
+      await addBuildingMutation({
+        variables: {
+          name: newBuilding.name,
+          temperature: newBuilding.temperature
         }
-        catch(error){
-          console.error('error: ',error);
+      });
+      await refetch();
+    }
+    catch (error) {
+      console.error('error: ', error);
+    }
+  }
+
+  const updateBuilding = async (id: string, updates: Partial<Building>) => {
+
+    try {
+      console.log('before updating.. ', updates);
+      const result = await updateBuildingMutation({
+        variables: { id: id, name: updates.name, temperature: updates.temperature }
+      });
+      await refetch();
+      console.log('here is the result');
+    }
+    catch (error) {
+      console.error('error: ', error);
+    }
+  }
+
+  const deleteBuilding = async (id: string) => {
+    try {
+      const result = await deleteBuildingMutation({
+        variables: { id }
+      });
+      if(result){
+        alert('building deleted');
       }
+      await refetch();
     }
+    catch (error) {
+      console.error('error: ', error);
+    }
+  }
 
-    const updateBuilding = async(id: string, updates: Partial<Building>)=> {
-       // updates.name = 'updated name';
-       // console.log('inside updated.', updates);
-      
-      try{
-        console.log('before updating.. ', updates);
-        const result = await updateBuildingMutation({
-        //  variables: { id, ...updates }
-          variables:{id:id,something:'her',name:updates.name,temperature:updates.temperature}
-        });
-        console.log('here is the result');
-        }
-        catch(error){
-          console.error('error: ', error);
-        }
+  const submitBuilding = async ({ name, temperature }: { name: string, temperature: number }, postMethod: (() => void)) => {
+    console.log('submit: ', typeof postMethod);
+    if (!name) {
+      alert("Building Name is required");
+      return;
     }
-    
-    
-    return (
-        <BuildingsContext.Provider   value={{ buildings: buildingSpec, addBuilding, updateBuilding }}>
-           {children}
-           
-        </BuildingsContext.Provider>
-      );
+    if (temperature < 0 || temperature > 35) {
+      alert("Temperature must be between  0 °C and 35 °C ");
+      return;
+    }
+    postMethod();
+  }
+
+  return (
+    <BuildingsContext.Provider value={{ buildings: buildingSpec, addBuilding, updateBuilding, deleteBuilding, submitBuilding }}>
+      {children}
+
+    </BuildingsContext.Provider>
+  );
 }

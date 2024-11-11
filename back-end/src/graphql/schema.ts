@@ -11,7 +11,7 @@ export const typeDef = `#graphql
 
   type Mutation {
     addBuildingSpec(name: String!, temperature: Int!): BuildingSpec!
-    updateBuildingSpec(id:ID! name: String, temperature: Int) : BuildingSpec! 
+    updateBuildingSpec(id:ID!, name: String!, temperature: Int!) : BuildingSpec! 
     deleteBuilding(id: ID!): Boolean!
   }  
   

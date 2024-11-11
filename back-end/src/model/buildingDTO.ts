@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-
+//Mongo model class
 export interface IBuilding extends Document {
   name: string;
   temperature: number;

@@ -1,10 +1,8 @@
 import { DatabaseConnectionError } from "./database-connectivity-error"
-import { InvalidTemperatureError } from "./invalid-temperature-error"
+import { InvalidInputValuesError } from "./invalid-temperature-error"
 class BaseError extends Error {
     constructor(
-      public message: string,
-      public code: string,
-      public status: number,
+      public message: string
     ) {
       super(message)
       this.name = this.constructor.name
@@ -12,4 +10,4 @@ class BaseError extends Error {
     }
   }
 
-  export {BaseError,DatabaseConnectionError,InvalidTemperatureError}
+  export {BaseError,DatabaseConnectionError,InvalidInputValuesError}
