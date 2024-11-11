@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Button from '../button/button.component';
+
 interface BuildingFormProps {
     initialName: string;
     initialTemperature: number;
@@ -9,29 +11,25 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ initialName, initialTempera
     const [name, setName] = useState(initialName);
     const [temperature, setTemperature] = useState(initialTemperature);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSubmit(name, temperature);
-    };
-
-    
     return (
-        <form onSubmit={handleSubmit}>
-            <input 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                required 
+        <form>
+            <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
                 placeholder="Building Name"
             />
-            <input 
-                value={temperature} 
-                onChange={(e) => setTemperature(e.target.valueAsNumber)} 
-                required 
+            <input
+                value={temperature}
+                onChange={(e) => setTemperature(e.target.valueAsNumber)}
+                required
+                min={0}
+                max={35}
                 type='number'
             />
-            <button type="submit">{buttonText}</button>
+            <Button text={buttonText} onClick={() => onSubmit(name, temperature)} />
+
         </form>
     );
 };
-
 export default BuildingForm;

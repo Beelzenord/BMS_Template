@@ -1,21 +1,26 @@
 import { BaseButton } from "./button.styles";
 
 export const BUTTON_TYPE_CLASSES = {
-    base: 'base',
-    edit: 'edit',
-   
-  };
+  base: 'base',
+  edit: 'edit',
+};
+interface ActionButtonProps {
+  text: string;
+  onClick: () => void;
+  disabled?: boolean;
+}
 
 const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) =>
-    ({
-      [BUTTON_TYPE_CLASSES.base]: BaseButton,
-     // [BUTTON_TYPE_CLASSES.edit]: GoogleSignInButton,
-     // [BUTTON_TYPE_CLASSES.inverted]: InvertedButton,
-    }[buttonType]);
+({
+  [BUTTON_TYPE_CLASSES.base]: BaseButton,
+}[buttonType]);
 
-const Button = () =>{
-   // const CustomButton = getButton(buttonType);
-    return(
-            <Button></Button>
-    )
+const Button: React.FC<ActionButtonProps> = ({ ...otherProps }) => {
+  return (
+    <button {...otherProps}  >
+      {otherProps.text}
+    </button>
+  )
 }
+
+export default Button;

@@ -1,4 +1,4 @@
-
+//Graphql model class
 export interface BuildingSpecifier{
     id: string
     buildingName: string
