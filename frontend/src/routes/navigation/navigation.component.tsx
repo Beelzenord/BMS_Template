@@ -1,6 +1,4 @@
 
-//import './navigation.styles.scss';
-//import './navigation.component.styles.scss';
 import './navigation.styles.css'
 import { Outlet,Link } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';

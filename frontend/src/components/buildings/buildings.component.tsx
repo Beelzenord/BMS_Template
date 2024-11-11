@@ -1,6 +1,5 @@
 import { useEffect, useContext, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
-import React from "react";
 import Button from "../button/button.component";
 import { BuildingsContext } from "../../contexts/building.context";
 import BuildingCard from "../building-card/building-card.component";
@@ -11,8 +10,16 @@ const Buildings = () => {
   const { buildings, addBuilding, submitBuilding } = useContext(BuildingsContext)!;
   const [newBuilding, setNewBuilding] = useState(false);
 
-  const handleCreate = (name: string, temperature: number) => {
-    submitBuilding({ name: name, temperature: temperature }, (() => addBuilding({ name, temperature })));
+  
+  const handleCreate = async (name: string, temperature: number) => {
+   const result = await submitBuilding({ name: name, temperature: temperature }, (() =>  addBuilding({ name, temperature })));
+   
+   if(result){
+      //TODO:: maybe a popup
+   }
+   else{
+    console.error('Failed to add building');
+   }
   }
 
   useEffect(() => {

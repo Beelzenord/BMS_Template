@@ -1,8 +1,7 @@
-import { BuildingSpecifier} from '../model/building'
 import { v4 as uuidv4 } from 'uuid';
 import { Building,IBuilding } from '../model/buildingDTO'; 
-import { BaseError, DatabaseConnectionError, InvalidInputValuesError } from '../errors/base-error';
-import { validateInput, validateName, validateTemperature } from '../util/validators';
+import {  InvalidInputValuesError } from '../errors/base-error';
+import { validateName, validateTemperature } from '../util/validators';
 export const resolvers = {
     
     Query: {
@@ -33,12 +32,11 @@ export const resolvers = {
       if(!validateName(name)){
         throw new InvalidInputValuesError("Invalid naming" );
       }
-        const updatedBuilding = await Building.findByIdAndUpdate(
+      const updatedBuilding = await Building.findByIdAndUpdate(
           id,
           { name, temperature }
            // Option to return the updated document
         );
-        
         return updatedBuilding;
     },
     deleteBuilding: async (_: any, { id }: { id: string }) =>{
