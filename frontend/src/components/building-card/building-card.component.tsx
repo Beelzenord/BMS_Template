@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import  { useState, useContext } from 'react';
 import './building-card.styles.css';
 import { Building } from '../../contexts/building.context';
 import { BuildingsContext } from "../../contexts/building.context";
@@ -13,14 +13,24 @@ const BuildingCard = ({ building }: { building: Building }) => {
     const { updateBuilding, deleteBuilding, submitBuilding } = useContext(BuildingsContext)!;
 
 
-    const handleUpdate = (newName: string, newTemperature: number) => {
-        submitBuilding({ name: newName, temperature: newTemperature }, (() => updateBuilding(building.id, { name: newName, temperature: newTemperature })));
+    const handleUpdate = async (newName: string, newTemperature: number) => {
+        const result = await submitBuilding({ name: newName, temperature: newTemperature }, 
+            ()=>{
+                updateBuilding(building.id, { name: newName, temperature: newTemperature })   
+            });
+        if(result){
+            //TODO:: maybe a popup
+            console.log('success');
+         }
+         else{
+          console.error('Failed to add building');
+         }
         setEditable(false);
-    };
-    const handleDelete = () => {
+    }
+    const handleDelete = async () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this building?");
         if (confirmDelete) {
-            deleteBuilding(building.id);
+          await deleteBuilding(building.id);
         }
     }
     return (
@@ -38,7 +48,11 @@ const BuildingCard = ({ building }: { building: Building }) => {
                     <BuildingForm
                         initialName={name}
                         initialTemperature={temperature}
-                        onSubmit={handleUpdate}
+                        onSubmit={
+                             (name, temperature) => {
+                            // Update the building with an object containing both name and temperature
+                            handleUpdate( name, temperature );
+                        }}
                         buttonText="Update Building" ></BuildingForm>
                 )
             }
