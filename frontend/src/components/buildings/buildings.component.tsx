@@ -5,6 +5,7 @@ import { BuildingsContext } from "../../contexts/building.context";
 import BuildingCard from "../building-card/building-card.component";
 import './buildings.styles.css'
 import BuildingForm from "../form/form.component";
+import React from 'react';
 
 const Buildings = () => {
   const { buildings, addBuilding, submitBuilding } = useContext(BuildingsContext)!;

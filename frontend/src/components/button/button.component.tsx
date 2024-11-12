@@ -1,4 +1,5 @@
 import { BaseButton } from "./button.styles";
+import React from 'react';
 
 export const BUTTON_TYPE_CLASSES = {
   base: 'base',

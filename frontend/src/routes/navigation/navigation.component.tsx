@@ -2,6 +2,7 @@
 import './navigation.styles.css'
 import { Outlet,Link } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
+'import React from 'react';
 const Navigation = () => {
     return(
         <header className='Title'>

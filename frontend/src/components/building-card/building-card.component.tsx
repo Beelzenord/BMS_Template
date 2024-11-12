@@ -5,7 +5,7 @@ import { BuildingsContext } from "../../contexts/building.context";
 import BuildingForm from '../form/form.component';
 import BuildingDisplay from '../building-card-preview/building-card.preview';
 import Button from '../button/button.component';
-
+import React from 'react';
 
 const BuildingCard = ({ building }: { building: Building }) => {
     const { name, temperature } = building;
