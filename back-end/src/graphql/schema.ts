@@ -7,8 +7,9 @@ export const typeDef = `#graphql
   }
     type Query {
     buildingSpec: [BuildingSpec]
+    buildingSpecById(id: ID!): BuildingSpec!
   }
-
+#
   type Mutation {
     addBuildingSpec(name: String!, temperature: Int!): BuildingSpec!
     updateBuildingSpec(id:ID!, name: String!, temperature: Int!) : BuildingSpec! 

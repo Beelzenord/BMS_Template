@@ -1,4 +1,3 @@
-import { BaseButton } from "./button.styles";
 
 export const BUTTON_TYPE_CLASSES = {
   base: 'base',
@@ -10,11 +9,8 @@ interface ActionButtonProps {
   disabled?: boolean;
 }
 
-const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) =>
-({
-  [BUTTON_TYPE_CLASSES.base]: BaseButton,
-}[buttonType]);
 
+//Recyclable bitton
 const Button: React.FC<ActionButtonProps> = ({ ...otherProps }) => {
   return (
     <button {...otherProps}  >

@@ -1,5 +1,5 @@
 import { DatabaseConnectionError } from "./database-connectivity-error"
-import { InvalidInputValuesError } from "./invalid-temperature-error"
+import { InvalidInputValuesError } from "./invalid-input-error"
 class BaseError extends Error {
     constructor(
       public message: string

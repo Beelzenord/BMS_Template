@@ -4,7 +4,7 @@ interface BuildingDisplayProps {
     onEdit: () => void;
 }
 
-const BuildingDisplay: React.FC<BuildingDisplayProps> = ({ name, temperature, onEdit }) => {
+const BuildingDisplay: React.FC<BuildingDisplayProps> = ( {name,temperature,onEdit} ) => {
     return (
         <>
             <label>{name}</label>

@@ -2,7 +2,6 @@ import { createContext, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import React from 'react';
 import { COLLECTIONS, ADD_NEW_BUILDING, UPDATE_BUILDING, DELETE_BUILDING } from '../utils/graphql.client';
-
 export interface Building {
   id: string;
   name: string;
@@ -34,7 +33,6 @@ export const BuildingsProvider = ({ children }: { children: React.ReactNode }) =
 
   const addBuilding = async (building: Omit<Building, 'id'>): Promise<boolean> => {
     const newBuilding = { ...building, id: Date.now().toString() };
-    console.log('back in context ', newBuilding);
     try {
       const result = await addBuildingMutation({
         variables: {
@@ -44,12 +42,16 @@ export const BuildingsProvider = ({ children }: { children: React.ReactNode }) =
       });
       if (result && result.data && result.data.addBuildingSpec) {
         const { addBuildingSpec } = result.data;
-        console.log('RESULT: ', addBuildingSpec);
-        await refetch();
-        return true;
+        if (addBuildingSpec) {
+          await refetch();
+          return true;
+        }
+        else {
+          return false;
+        }
       } else {
         console.error('No addBuildingSpec found in result');
-        return false; // Added return statement here
+        return false;
       }
     }
     catch (error) {
@@ -59,38 +61,32 @@ export const BuildingsProvider = ({ children }: { children: React.ReactNode }) =
   }
 
   const updateBuilding = async (id: string, updates: Partial<Building>): Promise<boolean> => {
-
+    console.log(updates);
     try {
-      console.log('before updating.. ', updates);
       const result = await updateBuildingMutation({
         variables: { id: id, name: updates.name, temperature: updates.temperature }
       });
-      await refetch();
-      
       const { updateBuildingSpec } = result.data;
-      console.log('updated: ', updateBuildingSpec);
-      const updatedId : string = updateBuildingSpec.id
-      if(updatedId === id){
+      const updatedId: string = updateBuildingSpec.id;
+      if (updatedId === id) {
         await refetch();
-        console.log('returning true');
         return true;
-      }
-      else{
+      } else {
         return false;
+      }
     }
-  }
     catch (error) {
       console.error('error: ', error);
       return false;
     }
   }
 
-  const deleteBuilding = async (id: string):Promise<boolean> => {
+  const deleteBuilding = async (id: string): Promise<boolean> => {
     try {
       const result = await deleteBuildingMutation({
         variables: { id }
       });
-      if(result){
+      if (result) {
         alert('building deleted');
       }
       await refetch();
@@ -101,10 +97,8 @@ export const BuildingsProvider = ({ children }: { children: React.ReactNode }) =
       return false;
     }
   }
-//event: React.FormEvent<HTMLFormElement>,
+
   const submitBuilding = async ({ name, temperature }: { name: string, temperature: number }, postMethod: (() => Promise<boolean>)): Promise<boolean> => {
-   // event.preventDefault();
-    console.log('submit: ', typeof postMethod);
     if (!name) {
       alert("Building Name is required");
       return false;
@@ -113,10 +107,8 @@ export const BuildingsProvider = ({ children }: { children: React.ReactNode }) =
       alert("Temperature must be between  0 °C and 35 °C ");
       return false;
     }
-    //return true;
-    //console.log('await: ');
-  //  return true;
-    return await postMethod();
+
+    return true;
   }
 
   return (
