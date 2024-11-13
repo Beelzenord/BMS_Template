@@ -1,6 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-import { Building, IBuilding } from '../model/buildingDTO';
-import { InvalidInputValuesError, DatabaseConnectionError } from '../errors/base-error';
+import { Building } from '../model/buildingDTO';
+import { InvalidInputValuesError } from '../errors/base-error';
 import { validateName, validateTemperature } from '../util/validators';
 export const resolvers = {
 

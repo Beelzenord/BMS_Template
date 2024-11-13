@@ -1,21 +1,19 @@
 
 import './navigation.styles.css'
-import { Outlet,Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 const Navigation = () => {
     return(
         <header className='Title'>
         <Fragment>
-         <div >Naive Stugg</div>
+         <div >BMS App</div>
          <Link to='/'>
                 <div>Logo</div>
           </Link>
           <Link to='/buildings'>
                     Buildings
            </Link>
-
-          <div >
-               
+          <div>    
           </div>
          </Fragment>
          </header>

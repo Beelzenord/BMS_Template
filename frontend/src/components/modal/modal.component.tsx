@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import './modal.styles.css';
 
 interface ModalProps {
@@ -8,15 +8,25 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    onClose();
+  }, [onClose]);
+  
   useEffect(() => {
     if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+
       const timer = setTimeout(() => {
         onClose();
-      }, 1000);
+      }, 2000);
 
-      return () => clearTimeout(timer);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        clearTimeout(timer);
+      };
     }
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, handleClickOutside]);
+
 
   if (!isOpen) return null;
 

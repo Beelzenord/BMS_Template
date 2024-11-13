@@ -3,7 +3,6 @@ import {Route,Routes} from 'react-router-dom';
 import Navigation from './routes/navigation/navigation.component'
 import './App.css'
 import Buildings from './routes/buildings/buildings.component';
-import { ApolloClient,InMemoryCache } from '@apollo/client';
 
 
 const Home = ()=>{

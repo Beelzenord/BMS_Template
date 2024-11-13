@@ -39,13 +39,7 @@ export const UPDATE_BUILDING = gql`
     }
   }
 `;
-/**
- *  updateBuildingSpec(id: $updateBuildingSpecId, name: $name, temperature: $temperature) {
-    id
-    name
-    temperature
-  }
- */
+
 export const DELETE_BUILDING = gql`
   mutation($id:ID!){
     deleteBuilding(id: $id)

@@ -6,7 +6,7 @@ import BuildingDisplay from '../building-card-preview/building-card.preview';
 import Button from '../button/button.component';
 import Modal from '../modal/modal.component';
 import { Building } from '../../contexts/building.context';
-//const BuildingCard = ({ building, updateBuilding }: { building: Building; updateBuilding: (id: string, updates: Partial<Building>) => Promise<boolean> }) => {
+
 const BuildingCard = ({ building }: { building: Building }) => {
     const { name, temperature } = building;
     const [onEditable, setEditable] = useState(false);
@@ -14,27 +14,26 @@ const BuildingCard = ({ building }: { building: Building }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
 
+    const showModal = (message:string) =>{
+        setModalMessage(message);
+        setIsModalOpen(true);
+    }
 
     //invoke submit which examines validity of input, and update building which sends data to graphql instance
     const handleUpdate = async (newName: string, newTemperature: number) => {
-        console.log('typeof: ', typeof updateBuilding)
-        const updates = { name: "New Name", temperature: 25 };
 
         updateBuilding(building.id, { name: newName, temperature: newTemperature })
             .then((result) => {
                 if (result) {
-                    setModalMessage('Building updated successfully');
-                    setIsModalOpen(true);
+                    showModal('Building updated successfully');
                 } else {
+                    showModal('Failed to update building')
                     console.error('Failed to update building');
-                    setModalMessage('Failed to update building');
-                    setIsModalOpen(true);
                 }
             })
             .catch((error) => {
                 console.error('Error updating building:', error);
-                setModalMessage('Failed to update building');
-                setIsModalOpen(true);
+                showModal('Error in updating building');
             });
 
         setEditable(false);
@@ -43,13 +42,9 @@ const BuildingCard = ({ building }: { building: Building }) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this building?");
         if (confirmDelete) {
             const result = await deleteBuilding(building.id);
-            if (result) {
-                setModalMessage('Building deleted successfully');
-                setIsModalOpen(true);
-            }
-            else {
-                setModalMessage('Failed to delete building');
-                setIsModalOpen(true);
+            if (!result) {
+                console.error('Error deleting building:');
+                showModal('Error in deleting building');
             }
         }
     }

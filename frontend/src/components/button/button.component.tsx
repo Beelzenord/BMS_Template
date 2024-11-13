@@ -10,7 +10,7 @@ interface ActionButtonProps {
 }
 
 
-//Recyclable bitton
+//Reusable button
 const Button: React.FC<ActionButtonProps> = ({ ...otherProps }) => {
   return (
     <button {...otherProps}  >

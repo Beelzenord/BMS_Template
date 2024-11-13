@@ -11,25 +11,26 @@ const Buildings = () => {
   const [newBuilding, setNewBuilding] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-
+  
+  const showModal = (message:string) =>{
+    setModalMessage(message);
+    setIsModalOpen(true);
+  }
   const handleCreate = async (name: string, temperature: number) => {
     const validateInput = await submitBuilding({ name: name, temperature: temperature });//, (() =>  addBuilding({ name, temperature })));
 
     if (validateInput) {
       const result = await addBuilding({ name, temperature })
       if (result) {
-        setModalMessage('Building added successfully');
-        setIsModalOpen(true);
+        showModal('Building added successfully');
       }
       else {
-        setModalMessage('Building failed to be added');
-        setIsModalOpen(true);
+        showModal('Failed to add building');
       }
     }
     else {
       console.error('Failed to add building');
-      setModalMessage('Building failed to be added');
-      setIsModalOpen(true);
+      showModal('Failed to add building');
     }
   }
 

@@ -61,7 +61,6 @@ export const BuildingsProvider = ({ children }: { children: React.ReactNode }) =
   }
 
   const updateBuilding = async (id: string, updates: Partial<Building>): Promise<boolean> => {
-    console.log(updates);
     try {
       const result = await updateBuildingMutation({
         variables: { id: id, name: updates.name, temperature: updates.temperature }

@@ -1,4 +1,3 @@
-import { InvalidInputValuesError } from "../errors/invalid-input-error";
 
 export const validateTemperature = (temperature: number) => {
     if (temperature < 0 || temperature > 35) {
