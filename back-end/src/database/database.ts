@@ -8,9 +8,7 @@ const MONGO_URI = process.env.MONGO_URI as string;  // Retrieve the environment 
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(MONGO_URI, {
-        
-      
+    await mongoose.connect(MONGO_URI, { 
     });
     console.log('MongoDB connected successfully!');
   } catch (error) {

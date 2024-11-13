@@ -1,41 +1,57 @@
-import  { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import './building-card.styles.css';
-import { Building } from '../../contexts/building.context';
 import { BuildingsContext } from "../../contexts/building.context";
 import BuildingForm from '../form/form.component';
 import BuildingDisplay from '../building-card-preview/building-card.preview';
 import Button from '../button/button.component';
-
+import Modal from '../modal/modal.component';
+import { Building } from '../../contexts/building.context';
 
 const BuildingCard = ({ building }: { building: Building }) => {
     const { name, temperature } = building;
     const [onEditable, setEditable] = useState(false);
-    const { updateBuilding, deleteBuilding, submitBuilding } = useContext(BuildingsContext)!;
+    const { deleteBuilding, updateBuilding } = useContext(BuildingsContext)!;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
 
+    const showModal = (message:string) =>{
+        setModalMessage(message);
+        setIsModalOpen(true);
+    }
 
+    //invoke submit which examines validity of input, and update building which sends data to graphql instance
     const handleUpdate = async (newName: string, newTemperature: number) => {
-        const result = await submitBuilding({ name: newName, temperature: newTemperature }, 
-            ()=>{
-                updateBuilding(building.id, { name: newName, temperature: newTemperature })   
+
+        updateBuilding(building.id, { name: newName, temperature: newTemperature })
+            .then((result) => {
+                if (result) {
+                    showModal('Building updated successfully');
+                } else {
+                    showModal('Failed to update building')
+                    console.error('Failed to update building');
+                }
+            })
+            .catch((error) => {
+                console.error('Error updating building:', error);
+                showModal('Error in updating building');
             });
-        if(result){
-            //TODO:: maybe a popup
-            console.log('success');
-         }
-         else{
-          console.error('Failed to add building');
-         }
+
         setEditable(false);
     }
     const handleDelete = async () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this building?");
         if (confirmDelete) {
-          await deleteBuilding(building.id);
+            const result = await deleteBuilding(building.id);
+            if (!result) {
+                console.error('Error deleting building:');
+                showModal('Error in deleting building');
+            }
         }
     }
     return (
         <div className='building-card'>
             {!onEditable ? (
+                //Alternate the card between display and editable form
                 <>
                     <BuildingDisplay
                         name={name}
@@ -44,19 +60,22 @@ const BuildingCard = ({ building }: { building: Building }) => {
                     />
                 </>
             ) :
-                (
+                (//edit the building card
                     <BuildingForm
                         initialName={name}
                         initialTemperature={temperature}
                         onSubmit={
-                             (name, temperature) => {
-                            // Update the building with an object containing both name and temperature
-                            handleUpdate( name, temperature );
-                        }}
+                            (name, temperature) => {
+                                
+                                handleUpdate(name, temperature);
+                            }}
                         buttonText="Update Building" ></BuildingForm>
                 )
             }
             <Button text='Delete' onClick={handleDelete}></Button>
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <p className="modal-message">{modalMessage}</p>
+            </Modal>
         </div>
     );
 }

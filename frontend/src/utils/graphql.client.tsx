@@ -11,7 +11,15 @@ export const COLLECTIONS = gql`
 
   }
 `
+export const BUILDING_BY_ID = gql`
+  query GetSingle {
+  
+    buildingSpecById(id: $buildingSpecByIdId) {
+     id
+     }
 
+  }
+`
 export const ADD_NEW_BUILDING = gql`
   mutation($name: String!, $temperature: Int!){
  
@@ -31,23 +39,10 @@ export const UPDATE_BUILDING = gql`
     }
   }
 `;
-/**
- *  updateBuildingSpec(id: $updateBuildingSpecId, name: $name, temperature: $temperature) {
-    id
-    name
-    temperature
-  }
- */
+
 export const DELETE_BUILDING = gql`
   mutation($id:ID!){
     deleteBuilding(id: $id)
   }
 `
 
-/**
- * updateBuildingSpec(id: $updateBuildingSpecId, buildingName:$buildingName, temperature: $temperature) {
-    id
-    buildingName
-    temperature
-  }
- */
